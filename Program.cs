@@ -2,11 +2,10 @@ using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurar el puerto para Render
+// Configuración de puerto para Render / Docker
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.UseUrls($"http://*:{port}");
 
-// Habilitar CORS para que el Frontend se conecte
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -16,44 +15,86 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 app.UseCors("AllowAll");
 
-// Helper para leer los archivos JSON
+// Mensaje en la raíz para verificar que la API esté viva
+app.MapGet("/", () => Results.Ok(new { status = "success", message = "API TechZone activa y lista" }));
+
+// Helper de lectura de JSON corregido con ruta AppContext.BaseDirectory
 T ReadJson<T>(string fileName)
 {
-    var path = Path.Combine(Directory.GetCurrentDirectory(), "Data", fileName);
+    var baseDir = AppContext.BaseDirectory;
+    var path = Path.Combine(baseDir, "Data", fileName);
+    
+    // Si no está en BaseDirectory, busca en la raíz de ejecución
+    if (!File.Exists(path))
+    {
+        path = Path.Combine(Directory.GetCurrentDirectory(), "Data", fileName);
+    }
+
+    if (!File.Exists(path))
+    {
+        throw new FileNotFoundException($"No se encontró el archivo JSON en: {path}");
+    }
+
     var json = File.ReadAllText(path);
     return JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
 }
 
-// Endpoints de la API
+// Endpoints API
 app.MapGet("/api/productos", (int? categoria_id, string? search) =>
 {
-    var productos = ReadJson<List<Producto>>("productos.json");
-    var query = productos.AsEnumerable();
-    if (categoria_id.HasValue) query = query.Where(p => p.Categoria_Id == categoria_id.Value);
-    if (!string.IsNullOrWhiteSpace(search)) query = query.Where(p => p.Nombre.Contains(search, StringComparison.OrdinalIgnoreCase));
-    var resultado = query.ToList();
-    return Results.Ok(new { status = "success", count = resultado.Count, data = resultado });
+    try
+    {
+        var productos = ReadJson<List<Producto>>("productos.json");
+        var query = productos.AsEnumerable();
+        if (categoria_id.HasValue) query = query.Where(p => p.Categoria_Id == categoria_id.Value);
+        if (!string.IsNullOrWhiteSpace(search)) query = query.Where(p => p.Nombre.Contains(search, StringComparison.OrdinalIgnoreCase));
+        return Results.Ok(new { status = "success", count = query.Count(), data = query.ToList() });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
 });
 
 app.MapGet("/api/productos/{id:int}", (int id) =>
 {
-    var productos = ReadJson<List<Producto>>("productos.json");
-    var producto = productos.FirstOrDefault(p => p.Id == id);
-    return producto is not null ? Results.Ok(new { status = "success", data = producto }) : Results.NotFound(new { status = "error", message = "Producto no encontrado" });
+    try
+    {
+        var productos = ReadJson<List<Producto>>("productos.json");
+        var producto = productos.FirstOrDefault(p => p.Id == id);
+        return producto is not null ? Results.Ok(new { status = "success", data = producto }) : Results.NotFound(new { status = "error", message = "Producto no encontrado" });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
 });
 
-app.MapGet("/api/categorias", () => Results.Ok(new { status = "success", data = ReadJson<List<Categoria>>("categorias.json") }));
-app.MapGet("/api/promociones", () => Results.Ok(new { status = "success", data = ReadJson<List<Promocion>>("promociones.json") }));
+app.MapGet("/api/categorias", () =>
+{
+    try { return Results.Ok(new { status = "success", data = ReadJson<List<Categoria>>("categorias.json") }); }
+    catch (Exception ex) { return Results.Problem(ex.Message); }
+});
+
+app.MapGet("/api/promociones", () =>
+{
+    try { return Results.Ok(new { status = "success", data = ReadJson<List<Promocion>>("promociones.json") }); }
+    catch (Exception ex) { return Results.Problem(ex.Message); }
+});
+
 app.MapGet("/api/resenas", (int? producto_id) =>
 {
-    var resenas = ReadJson<List<Resena>>("resenas.json");
-    if (producto_id.HasValue) resenas = resenas.Where(r => r.Producto_Id == producto_id.Value).ToList();
-    return Results.Ok(new { status = "success", data = resenas });
+    try
+    {
+        var resenas = ReadJson<List<Resena>>("resenas.json");
+        if (producto_id.HasValue) resenas = resenas.Where(r => r.Producto_Id == producto_id.Value).ToList();
+        return Results.Ok(new { status = "success", data = resenas });
+    }
+    catch (Exception ex) { return Results.Problem(ex.Message); }
 });
 
 app.Run();
 
-// Modelos de datos
 record Producto(int Id, int Categoria_Id, string Nombre, decimal Precio, int Stock, string Descripcion, string Imagen);
 record Categoria(int Id, string Nombre, string Icono);
 record Promocion(int Id, string Titulo, string Descuento, string Codigo);
