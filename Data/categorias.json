@@ -1,0 +1,10 @@
+[
+  { "id": 1, "nombre": "Laptops & Computadoras", "icono": "bi-laptop" },
+  { "id": 2, "nombre": "Smartphones & Tablets", "icono": "bi-phone" },
+  { "id": 3, "nombre": "Audio & Auriculares", "icono": "bi-headphones" },
+  { "id": 4, "nombre": "Monitores & Displays", "icono": "bi-display" },
+  { "id": 5, "nombre": "Teclados & Mouses", "icono": "bi-keyboard" },
+  { "id": 6, "nombre": "Consolas & Gaming", "icono": "bi-controller" },
+  { "id": 7, "nombre": "Smartwatches & Wearables", "icono": "bi-smartwatch" },
+  { "id": 8, "nombre": "Cámaras & Fotografía", "icono": "bi-camera" }
+]

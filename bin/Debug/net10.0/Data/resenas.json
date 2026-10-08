@@ -1,0 +1,10 @@
+[
+  { "id": 1, "producto_id": 1, "usuario": "Carlos M.", "comentario": "Increíble potencia para juegos como Cyberpunk. No se calienta casi nada.", "estrellas": 5 },
+  { "id": 2, "producto_id": 1, "usuario": "David R.", "comentario": "Excelente pantalla y rendimiento, aunque la batería dura pocas horas sin enchufar.", "estrellas": 4 },
+  { "id": 3, "producto_id": 3, "usuario": "Valeria P.", "comentario": "La cámara de 200MP de noche saca fotos espectaculares. Vale cada dólar.", "estrellas": 5 },
+  { "id": 4, "producto_id": 5, "usuario": "Ana K.", "comentario": "La cancelación de ruido es la mejor que he probado. Ideal para viajar en avión.", "estrellas": 5 },
+  { "id": 5, "producto_id": 7, "usuario": "Jorge L.", "comentario": "Los 165Hz hacen una diferencia gigante en juegos competitivos. Recomendado.", "estrellas": 5 },
+  { "id": 6, "producto_id": 8, "usuario": "Mariana S.", "comentario": "El teclado es muy cómodo para escribir todo el día en la oficina.", "estrellas": 4 },
+  { "id": 7, "producto_id": 10, "usuario": "Lucas T.", "comentario": "Llegó súper rápido y los tiempos de carga en los juegos son instantáneos.", "estrellas": 5 },
+  { "id": 8, "producto_id": 12, "usuario": "Sonia G.", "comentario": "Excelente calidad de imagen para mi canal de YouTube. El enfoque a los ojos es rapidísimo.", "estrellas": 5 }
+]

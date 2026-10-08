@@ -1,0 +1,6 @@
+[
+  { "id": 1, "titulo": "Cyber Tech 2026", "descuento": "20% OFF en Laptops y Monitores", "codigo": "TECH20" },
+  { "id": 2, "titulo": "Envío Gratis", "descuento": "En todas tus compras mayores a $100", "codigo": "FREESHIP" },
+  { "id": 3, "titulo": "Especial Audio", "descuento": "15% de descuento en Auriculares y Parlantes", "codigo": "AUDIOPRO" },
+  { "id": 4, "titulo": "Combo Gamer", "descuento": "Llévate un Mouse Pad XXL gratis por la compra de un Teclado", "codigo": "GAMINGPACK" }
+]

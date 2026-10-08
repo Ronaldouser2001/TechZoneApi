@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1,
+    "categoria_id": 1,
+    "nombre": "Laptop Gamer Pro X15",
+    "precio": 1399.99,
+    "stock": 10,
+    "descripcion": "Procesador Intel i7 13va gen, 16GB RAM, SSD 1TB, Nvidia RTX 4060.",
+    "imagen": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=600"
+  },
+  {
+    "id": 2,
+    "categoria_id": 1,
+    "nombre": "MacBook Pro M3 Ultra",
+    "precio": 1999.00,
+    "stock": 8,
+    "descripcion": "Chip M3 Pro, 18GB memoria unificada, pantalla Liquid Retina XDR de 14''.",
+    "imagen": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600"
+  },
+  {
+    "id": 3,
+    "categoria_id": 2,
+    "nombre": "Smartphone Galaxy S24 Ultra",
+    "precio": 1199.50,
+    "stock": 15,
+    "descripcion": "Pantalla Dynamic AMOLED 2X 120Hz, cámara de 200MP, S-Pen integrado.",
+    "imagen": "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=600"
+  },
+  {
+    "id": 4,
+    "categoria_id": 2,
+    "nombre": "iPhone 15 Pro Max",
+    "precio": 1299.00,
+    "stock": 12,
+    "descripcion": "Diseño en titanio, chip A17 Pro, botón de Acción, zoom óptico 5x.",
+    "imagen": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600"
+  },
+  {
+    "id": 5,
+    "categoria_id": 3,
+    "nombre": "Audífonos Sony WH-1000XM5",
+    "precio": 349.99,
+    "stock": 20,
+    "descripcion": "Cancelación de ruido líder en la industria, batería de 30h, audio Hi-Res.",
+    "imagen": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600"
+  },
+  {
+    "id": 6,
+    "categoria_id": 3,
+    "nombre": "AirPods Pro 2da Generación",
+    "precio": 249.00,
+    "stock": 25,
+    "descripcion": "Audio espacial personalizado, cancelación activa de ruido y estuche MagSafe.",
+    "imagen": "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=600"
+  },
+  {
+    "id": 7,
+    "categoria_id": 4,
+    "nombre": "Monitor Gamer Curved 27'' 165Hz",
+    "precio": 289.90,
+    "stock": 14,
+    "descripcion": "Resolución QHD (2560x1440), 1ms de respuesta, tecnología FreeSync Premium.",
+    "imagen": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600"
+  },
+  {
+    "id": 8,
+    "categoria_id": 5,
+    "nombre": "Teclado Mecánico RGB Wireless",
+    "precio": 119.50,
+    "stock": 30,
+    "descripcion": "Switches Red silenciosos, iluminación RGB personalizable, conexión Bluetooth.",
+    "imagen": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600"
+  },
+  {
+    "id": 9,
+    "categoria_id": 5,
+    "nombre": "Mouse Ergonómico MX Master 3S",
+    "precio": 99.00,
+    "stock": 18,
+    "descripcion": "Sensor de 8000 DPI, clics silenciosos, desplazamiento MagSpeed ultarrápido.",
+    "imagen": "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=600"
+  },
+  {
+    "id": 10,
+    "categoria_id": 6,
+    "nombre": "Consola PlayStation 5 Slim",
+    "precio": 499.99,
+    "stock": 9,
+    "descripcion": "SSD de 1TB de ultra alta velocidad, audio 3D y gatillos adaptativos DualSense.",
+    "imagen": "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600"
+  },
+  {
+    "id": 11,
+    "categoria_id": 7,
+    "nombre": "Smartwatch Watch Series 9",
+    "precio": 399.00,
+    "stock": 16,
+    "descripcion": "Pantalla Retina siempre activa, ECG, sensor de oxígeno y gesto de doble toque.",
+    "imagen": "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=600"
+  },
+  {
+    "id": 12,
+    "categoria_id": 8,
+    "nombre": "Cámara Mirrorless 4K Sony Alpha",
+    "precio": 899.00,
+    "stock": 7,
+    "descripcion": "Sensor de 24.2 MP, enfoque automático en tiempo real y grabación video 4K HDR.",
+    "imagen": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600"
+  }
+]

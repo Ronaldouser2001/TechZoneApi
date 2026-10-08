@@ -1,0 +1,6 @@
+@TechZoneApi_HostAddress = http://localhost:5062
+
+GET {{TechZoneApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
