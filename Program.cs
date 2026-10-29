@@ -15,16 +15,15 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 app.UseCors("AllowAll");
 
-// Mensaje en la raíz para verificar que la API esté viva
 app.MapGet("/", () => Results.Ok(new { status = "success", message = "API TechZone activa y lista" }));
 
-// Helper de lectura de JSON corregido con ruta AppContext.BaseDirectory
-T ReadJson<T>(string fileName)
+#region Helpers para Archivos JSON
+
+string GetFilePath(string fileName)
 {
     var baseDir = AppContext.BaseDirectory;
     var path = Path.Combine(baseDir, "Data", fileName);
-    
-    // Si no está en BaseDirectory, busca en la raíz de ejecución
+
     if (!File.Exists(path))
     {
         path = Path.Combine(Directory.GetCurrentDirectory(), "Data", fileName);
@@ -35,11 +34,29 @@ T ReadJson<T>(string fileName)
         throw new FileNotFoundException($"No se encontró el archivo JSON en: {path}");
     }
 
+    return path;
+}
+
+T ReadJson<T>(string fileName)
+{
+    var path = GetFilePath(fileName);
     var json = File.ReadAllText(path);
     return JsonSerializer.Deserialize<T>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
 }
 
-// Endpoints API
+void WriteJson<T>(string fileName, T data)
+{
+    var path = GetFilePath(fileName);
+    var options = new JsonSerializerOptions { WriteIndented = true };
+    var json = JsonSerializer.Serialize(data, options);
+    File.WriteAllText(path, json);
+}
+
+#endregion
+
+#region Endpoints CRUD para Productos
+
+// READ (Listar todos / filtrar)
 app.MapGet("/api/productos", (int? categoria_id, string? search) =>
 {
     try
@@ -50,12 +67,10 @@ app.MapGet("/api/productos", (int? categoria_id, string? search) =>
         if (!string.IsNullOrWhiteSpace(search)) query = query.Where(p => p.Nombre.Contains(search, StringComparison.OrdinalIgnoreCase));
         return Results.Ok(new { status = "success", count = query.Count(), data = query.ToList() });
     }
-    catch (Exception ex)
-    {
-        return Results.Problem(ex.Message);
-    }
+    catch (Exception ex) { return Results.Problem(ex.Message); }
 });
 
+// READ (Obtener por ID)
 app.MapGet("/api/productos/{id:int}", (int id) =>
 {
     try
@@ -64,11 +79,86 @@ app.MapGet("/api/productos/{id:int}", (int id) =>
         var producto = productos.FirstOrDefault(p => p.Id == id);
         return producto is not null ? Results.Ok(new { status = "success", data = producto }) : Results.NotFound(new { status = "error", message = "Producto no encontrado" });
     }
-    catch (Exception ex)
-    {
-        return Results.Problem(ex.Message);
-    }
+    catch (Exception ex) { return Results.Problem(ex.Message); }
 });
+
+// CREATE (Crear un nuevo producto)
+app.MapPost("/api/productos", (ProductoInput input) =>
+{
+    try
+    {
+        var productos = ReadJson<List<Producto>>("productos.json");
+        int nuevoId = productos.Any() ? productos.Max(p => p.Id) + 1 : 1;
+
+        var nuevoProducto = new Producto(
+            nuevoId,
+            input.Categoria_Id,
+            input.Nombre,
+            input.Precio,
+            input.Stock,
+            input.Descripcion,
+            input.Imagen
+        );
+
+        productos.Add(nuevoProducto);
+        WriteJson("productos.json", productos);
+
+        return Results.Created($"/api/productos/{nuevoId}", new { status = "success", message = "Producto creado con éxito", data = nuevoProducto });
+    }
+    catch (Exception ex) { return Results.Problem(ex.Message); }
+});
+
+// UPDATE (Actualizar un producto existente)
+app.MapPut("/api/productos/{id:int}", (int id, ProductoInput input) =>
+{
+    try
+    {
+        var productos = ReadJson<List<Producto>>("productos.json");
+        int index = productos.FindIndex(p => p.Id == id);
+
+        if (index == -1)
+            return Results.NotFound(new { status = "error", message = "Producto no encontrado" });
+
+        var productoActualizado = new Producto(
+            id,
+            input.Categoria_Id,
+            input.Nombre,
+            input.Precio,
+            input.Stock,
+            input.Descripcion,
+            input.Imagen
+        );
+
+        productos[index] = productoActualizado;
+        WriteJson("productos.json", productos);
+
+        return Results.Ok(new { status = "success", message = "Producto actualizado con éxito", data = productoActualizado });
+    }
+    catch (Exception ex) { return Results.Problem(ex.Message); }
+});
+
+// DELETE (Eliminar un producto)
+app.MapDelete("/api/productos/{id:int}", (int id) =>
+{
+    try
+    {
+        var productos = ReadJson<List<Producto>>("productos.json");
+        var producto = productos.FirstOrDefault(p => p.Id == id);
+
+        if (producto is null)
+            return Results.NotFound(new { status = "error", message = "Producto no encontrado" });
+
+        productos.Remove(producto);
+        WriteJson("productos.json", productos);
+
+        return Results.Ok(new { status = "success", message = "Producto eliminado con éxito" });
+    }
+    catch (Exception ex) { return Results.Problem(ex.Message); }
+});
+
+#endregion
+
+#region Endpoints de Lectura (Categorías, Promociones, Reseñas)
 
 app.MapGet("/api/categorias", () =>
 {
@@ -93,9 +183,16 @@ app.MapGet("/api/resenas", (int? producto_id) =>
     catch (Exception ex) { return Results.Problem(ex.Message); }
 });
 
+#endregion
+
 app.Run();
 
+#region DTOs / Records
+
 record Producto(int Id, int Categoria_Id, string Nombre, decimal Precio, int Stock, string Descripcion, string Imagen);
+record ProductoInput(int Categoria_Id, string Nombre, decimal Precio, int Stock, string Descripcion, string Imagen);
 record Categoria(int Id, string Nombre, string Icono);
 record Promocion(int Id, string Titulo, string Descuento, string Codigo);
 record Resena(int Id, int Producto_Id, string Usuario, string Comentario, int Estrellas);
+
+#endregion
